@@ -542,9 +542,9 @@ void imdilate(int nx, int ny, double **mask, double **out, int times)
             {
                 pres      = 0;
                 out[i][j] = mask[i][j];
-                for (ii = (i-1); ii < (i+2); ii++)
+                for (ii = (i-1); ii <= (i+1); ii++)
                 {
-                    for (jj = (j-1); jj < (j+2); jj++)
+                    for (jj = (j-1); jj <= (j+1); jj++)
                     {
                         if (pres == 0 && mask[ii][jj] > 0)
                             pres = 1;
@@ -897,10 +897,23 @@ void solveNLCTV(
                     u0[i][j][0] = u[i0-s_r+max_ii][j0-s_r+max_jj][0];
                     u0[i][j][1] = u[i0-s_r+max_ii][j0-s_r+max_jj][1];
                     u0[i][j][2] = u[i0-s_r+max_ii][j0-s_r+max_jj][2];
-                    phi[i0][j0]=1;
                 }
             }
         }
+
+		for(i=0;i<m;i++)
+		{
+			for(j=0;j<n;j++)
+			{
+				i0=i+t_r;
+				j0=j+t_r;
+				for(k=0;k<c;k++) {
+					u[i0][j0][k]=u0[i][j][k];
+				}
+			}
+		}
+
+		updatePhi(M, N, c, u, phi);
 
         if (allOne(M,N,phi)==1 || sumMatrix(M,N,phi) == last_count)
         {
@@ -983,8 +996,8 @@ void mexFunction(int numOut, mxArray *pmxOut[],
 
     for(i=0;i<M*N;i++)
     {
-        phi[i%M][i/M] = (double)phiu[i];
-        PHI[i%M][i/M] = (double)PHIu[i];
+        phi[i%M][i/M]  = (double)phiu[i];
+        PHI[i%M][i/M]  = (double)PHIu[i];
     }
 
     solveNLCTV(m,n,c,u0,M,N,h,p_s,kernel,P_S,kernelk,t_r,

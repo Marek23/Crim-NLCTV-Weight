@@ -4,14 +4,12 @@ close all;
 
 mex main.c;
 
-images = dir('C:\MAREK\MAGISTERKA\Obrazy\imgmask\*.png');
-
 sw  = 1;
 h   = 1.5;
 s_r = 10;
 p_r = 5;
 
-f0=imread('Wood.png');
+f0=imread('test_small.png');
 
 %figure; imagesc(f0); colormap(gray); axis off; axis equal;
 f0=double(f0);
@@ -29,16 +27,16 @@ t_r = P_R+s_r;
 M   = m+2*t_r;
 N   = n+2*t_r;
 
-BrokenAreaColor=240;
+BrokenAreaColor=255;
 
 lamda   =.01;sigma=5; %%parametry jak poprzednio
 
 kernel  = fspecial('gaussian',p_s,sigma);
 kernelk = fspecial('gaussian',P_S,sigma);
 
-phi=double(1-((f0(:,:,1) < 10) & ...
-              (f0(:,:,2) >BrokenAreaColor) & ...
-              (f0(:,:,3) < 10)));
+phi=double(1-((f0(:,:,1) == 0) & ...
+              (f0(:,:,2) == BrokenAreaColor) & ...
+              (f0(:,:,3) == 0)));
 
 phi=padarray(phi,[t_r t_r],'symmetric');
 PHI=phi;
