@@ -3,14 +3,18 @@ clear;
 close all;
 
 mex main.c;
+%% parametry ustawiane przez u?ytkownika
+imageName = 'test_small.png';
+p_r   = 5;
+s_r   = 10;
+lamda =.01;
+sigma = 5;
+r     = 1.5;
+sw    = 3;
 
-sw  = 1;
-h   = 1.5;
-s_r = 10;
-p_r = 5;
+f0=imread(imageName);
 
-f0=imread('test_small.png');
-
+%%
 %figure; imagesc(f0); colormap(gray); axis off; axis equal;
 f0=double(f0);
 
@@ -29,7 +33,7 @@ N   = n+2*t_r;
 
 BrokenAreaColor=255;
 
-lamda   =.01;sigma=5; %%parametry jak poprzednio
+
 
 kernel  = fspecial('gaussian',p_s,sigma);
 kernelk = fspecial('gaussian',P_S,sigma);
@@ -45,7 +49,7 @@ u0=f0;
 
 tic
 u0r = main(m,n,c,u0(:),...
-    M,N,h,p_s,kernel(:),...*+asdf
+    M,N,r,p_s,kernel(:),...*+asdf
     P_S,kernelk(:),t_r,s_r,p_r,sw,phi(:),...
     PHI(:),s_s,lamda,f0(:));
 t = toc;
@@ -53,7 +57,7 @@ t = toc;
 u0 = reshape(u0r,[m,n,c]);
 %figure; imagesc(uint8(u0)); colormap(gray); axis off; axis equal;
 
-%imwrite(uint8(u0),['test\'  's_r_' num2str(s_r) 'p_r' num2str(p_r) 'h_' num2str(h) 'sw_' num2str(sw) 't_' num2str(t) '.png']);
+imwrite(uint8(u0),['output' 's_r_' num2str(s_r) 'p_r' num2str(p_r) 'h_' num2str(r) 'sw_' num2str(sw) 't_' num2str(t) '.png']);
 % imwrite(uint8(u0), 'sth.png');
 figure
 imshow(uint8(u0));
